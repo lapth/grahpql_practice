@@ -1,15 +1,15 @@
-import mongoose from 'mongoose';
-import { BookDTO } from './Book';
+import { Document, Schema, model } from 'mongoose';
 
-export type AuthorDTO = {
-  id: string;
+interface IAuthor {
   name: string;
-  books?: BookDTO[]
+  books: Schema.Types.ObjectId[];
 }
 
-const authorSchema = new mongoose.Schema({
-  name: String,
-  books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }]
+interface AuthorDocument extends IAuthor, Document {}
+
+const authorSchema = new Schema<AuthorDocument>({
+  name: { type: String, required: true },
+  books: [{ type: Schema.Types.ObjectId, ref: 'Book' }]
 });
 
-export default mongoose.model<AuthorDTO>('Author', authorSchema);
+export const AuthorModel = model<AuthorDocument>('Author', authorSchema);

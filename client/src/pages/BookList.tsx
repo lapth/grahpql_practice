@@ -25,13 +25,16 @@ const BookList = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.books.map((book) => (
-            <tr key={book.id}>
-              <td>{book.name}</td>
-              <td>{book.genre}</td>
-              <td>{book.author.name}</td>
-            </tr>
-          ))}
+          {data?.books.map((book) => {
+            console.log('Book:', book);
+            return (
+              <tr key={book._id}>
+                <td>{book.name}</td>
+                <td>{book.genre}</td>
+                <td>{book.author?.name || 'No author'}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
     </Container>

@@ -16,7 +16,11 @@ const AddAuthor = () => {
     e.preventDefault();
     try {
       await addAuthor({
-        variables: { name },
+        variables: { 
+          record: {
+            name
+          }
+        },
       });
       navigate('/authors');
     } catch (err) {

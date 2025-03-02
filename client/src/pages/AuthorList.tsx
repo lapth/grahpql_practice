@@ -25,7 +25,7 @@ const AuthorList = () => {
         </thead>
         <tbody>
           {data?.authors.map((author) => (
-            <tr key={author.id}>
+            <tr key={author._id}>
               <td>{author.name}</td>
               <td>{author.books?.map(book => book.name).join(', ')}</td>
             </tr>
