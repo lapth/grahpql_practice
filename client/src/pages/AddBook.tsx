@@ -19,7 +19,13 @@ const AddBook = () => {
     e.preventDefault();
     try {
       await addBook({
-        variables: { name, genre, authorId },
+        variables: { 
+          record: {
+            name,
+            genre,
+            authorId
+          }
+        },
       });
       navigate('/books');
     } catch (err) {
@@ -61,8 +67,8 @@ const AddBook = () => {
             required
           >
             <option value="">Select Author</option>
-            {authorsData.authors.map((author: any) => (
-              <option key={author.id} value={author.id}>
+            {authorsData?.authors.map((author: any) => (
+              <option key={author._id} value={author._id}>
                 {author.name}
               </option>
             ))}

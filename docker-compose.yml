@@ -6,12 +6,9 @@ services:
       context: ./client
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    volumes:
-      - ./client:/app
-      - /app/node_modules
+      - "80:80"
     environment:
-      - VITE_API_URL=http://server:4000/graphql
+      - VITE_API_URL=http://localhost:4000/graphql
     depends_on:
       - server
 
@@ -21,17 +18,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4000:4000"
-    volumes:
-      - ./server:/app
-      - /app/node_modules
     environment:
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - DB_HOST=mongodb
-      - DB_PORT=27017
-    networks:
-      - graphql-practice
+      - MONGODB_URI=mongodb://${DB_USER}:${DB_PASSWORD}@mongodb:27017/${DB_NAME}?authSource=admin
     depends_on:
       - mongodb
 
@@ -45,13 +33,6 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
       - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}
       - MONGO_INITDB_DATABASE=${DB_NAME}
-    networks:
-      - graphql-practice
 
 volumes:
   mongodb_data:
-    name: mongodb_data
-
-networks:
-  graphql-practice:
-    name: graphql-practice

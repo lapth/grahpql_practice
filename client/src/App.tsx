@@ -10,6 +10,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const client = new ApolloClient({
   uri: import.meta.env.VITE_API_URL || 'http://localhost:4000/graphql',
   cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache'
+    },
+    query: {
+      fetchPolicy: 'no-cache'
+    }
+  }
 });
 
 function App() {

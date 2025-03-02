@@ -1,16 +1,17 @@
-import mongoose from 'mongoose';
+import { Document, Schema, model } from 'mongoose';
 
-export type BookDTO = {
-  id: string;
+interface IBook {
   name: string;
   genre: string;
-  authorId: string;
+  authorId: Schema.Types.ObjectId;
 }
 
-const bookSchema = new mongoose.Schema({
-  name: String,
-  genre: String,
-  authorId: String
+interface BookDocument extends IBook, Document {}
+
+const bookSchema = new Schema<BookDocument>({
+  name: { type: String, required: true },
+  genre: { type: String, required: true },
+  authorId: { type: Schema.Types.ObjectId, ref: 'Author', required: true, index: true }
 });
 
-export default mongoose.model<BookDTO>('Book', bookSchema);
+export const BookModel = model<BookDocument>('Book', bookSchema);
