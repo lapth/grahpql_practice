@@ -1,11 +1,10 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
-import express, { Request, Response } from 'express';
+import express from 'express';
 import http from 'http';
 import cors from 'cors';
 import { json } from 'body-parser';
-import typeDefs from './schemas';
-import resolvers from './resolvers';
+import graphqlSchema from './graphql';
 import connectDB from './database';
 import dotenv from 'dotenv';
 
@@ -15,17 +14,16 @@ interface MyContext {
   token?: string;
 }
 
-async function startServer() {
-  // Create Express app
+const startServer = async () => {
+  // Connect to MongoDB
+  await connectDB();
+
   const app = express();
-  
-  // Create HTTP server
   const httpServer = http.createServer(app);
   
   // Create Apollo server
   const server = new ApolloServer<MyContext>({
-    typeDefs,
-    resolvers,
+    schema: graphqlSchema
   });
 
   // Start Apollo server
@@ -37,21 +35,13 @@ async function startServer() {
     cors<cors.CorsRequest>(),
     json(),
     expressMiddleware(server, {
-      context: async ({ req }: { req: Request }) => ({ 
-        token: req.headers.authorization 
-      })
-    })
+      context: async ({ req }) => ({ token: req.headers.token }),
+    }),
   );
 
   // Start server
-  const PORT = 4000;
-  httpServer.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}/graphql`);
-  });
+  await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
+  console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+};
 
-  await connectDB();
-}
-
-startServer().catch((error) => {
-  console.error('Error starting server:', error);
-});
+startServer();
